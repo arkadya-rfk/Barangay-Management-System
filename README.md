@@ -6,5 +6,5 @@
 
 
 
-<strong>BarangayManagement-System</strong>
+<strong>Baranga yManagement System</strong>
  
