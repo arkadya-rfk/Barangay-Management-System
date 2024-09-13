@@ -17,6 +17,10 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
+function capitalizeStatus($status) {
+    return ucfirst(strtolower($status)); // Convert to lowercase first, then capitalize
+}
+
 if (!$user) {
     echo "User not found!";
     exit;
@@ -39,17 +43,18 @@ if (!$user) {
 
     <!-- Sidebar -->
     <div id="sidebar" class="fixed top-0 left-0 h-screen w-64 bg-blue-700 text-white p-6 sidebar-open transition-transform duration-300">
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold">User Menu</h2>
-            <button onclick="toggleSidebar()"></button>
-        </div>
-        <ul class="mt-6">
-            <li class="mb-4"><a href="user_dashboard.php" class="text-white hover:text-black hover:font-bold">Profile</a></li>
-            <li class="mb-4"><a href="#" class="text-white hover:text-black hover:font-bold">Get Verified</a></li>
-            <li class="mb-4"><a href="#" class="text-white hover:text-black hover:font-bold">Request Document</a></li>
-            <li class="mb-4"><a href="logout.php" class="text-white hover:text-black hover:font-bold">Log Out</a></li>
-        </ul>
+    <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold">User Menu</h2>
+        <button onclick="toggleSidebar()"></button>
     </div>
+    <ul class="mt-6">
+        <li class="mb-4"><a href="user_dashboard.php" class="text-white hover:text-black font-bold">Profile</a></li>
+        <li class="mb-4"><a href="javascript:void(0)" class="text-white hover:text-black hover:font-bold" onclick="toggleModal()">Edit Profile</a></li> <!-- Edit Profile triggers modal -->
+        <li class="mb-4"><a href="#" class="text-white hover:text-black hover:font-bold">Request Document</a></li>
+        <li class="mb-4"><a href="logout.php" class="text-white hover:text-black hover:font-bold">Log Out</a></li>
+    </ul>
+</div>
+
 
 
     <?php if (isset($_GET['update'])): ?>
@@ -60,47 +65,55 @@ if (!$user) {
 
     <!-- Main Content -->
     <div class="ml-0 lg:ml-64 transition-all duration-300">
-        <div class="p-6">
-            <div class="bg-white p-4 rounded-lg shadow-md">
-                <div class="flex items-center justify-between">
-                    <h1 class="text-2xl font-bold">User Dashboard</h1>
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg" onclick="toggleModal()">Edit Information</button>
-                </div>
+    <div class="p-6">
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">User Dashboard</h1>
+                <!-- Removed Edit Information button here -->
+            </div>
 
-                <!-- User Info -->
-                <div class="mt-6 flex flex-col items-center">
-                    <img src="profile-image-placeholder.jpg" alt="Profile" class="w-24 h-24 rounded-full">
-                    <h2 class="text-lg font-bold mt-4">
-                        <?= isset($user['first_name']) && isset($user['last_name']) ? $user['first_name'] . " " . $user['middle_name'] . " " . $user['last_name'] : 'Name Not Available' ?>
-                    </h2>
-                    <p>Username: <?= isset($user['email']) ? $user['email'] : 'Email Not Available' ?></p>
-                    <p>Email: <?= isset($user['user_email']) ? $user['user_email'] : 'Email Not Available' ?></p>
-                    <p>Contact Number: <?= isset($user['contact']) ? $user['contact'] : 'Not Provided' ?></p>
-                </div>
+            <!-- User Info -->
+            <div class="mt-6 flex flex-col items-center">
+                <img src="au.jpg" alt="Profile" class="w-36 h-36 rounded-full">
+                <h2 class="text-lg font-bold mt-4">
+                    <?= isset($user['first_name']) && isset($user['last_name']) ? $user['first_name'] . " " . $user['middle_name'] . " " . $user['last_name'] : 'Name Not Available' ?>
+                </h2>
+                <p>Username: <?= isset($user['email']) ? $user['email'] : 'Email Not Available' ?></p>
+                <p>Email: <?= isset($user['user_email']) ? $user['user_email'] : 'Email Not Available' ?></p>
+                <p>Contact Number: <?= isset($user['contact']) ? $user['contact'] : 'Not Provided' ?></p>
+            </div>
 
-                <!-- Contact Info -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                    <div>
-                        <h3 class="font-bold">User Information</h3>
-                        <p>First Name: <?= $user['first_name'] ?></p>
-                        <p>Middle Name: <?= $user['middle_name'] ?></p>
-                        <p>Last Name: <?= $user['last_name'] ?></p>
-                        <p>Birth Date: <?= isset($user['birth_date']) ? $user['birth_date'] : 'Not Provided' ?></p>
-                    </div>
-                    <div>
-                        <h3 class="font-bold">Contact Information</h3>
-                        <p>Address: <?= isset($user['address']) ? $user['address'] : 'Not Provided' ?></p>
-                        <p>Civil Status: <?= isset($user['civil_status']) ? $user['civil_status'] : 'Not Provided' ?></p>
-                        <p>Citizenship: <?= $user['citizenship'] ?></p>
-                    </div>
+            <!-- Contact Info -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <div>
+                    <h3 class="font-bold">User Information</h3>
+                    <p>First Name: <?= $user['first_name'] ?></p>
+                    <p>Middle Name: <?= $user['middle_name'] ?></p>
+                    <p>Last Name: <?= $user['last_name'] ?></p>
+                    <?php
+                        if (isset($user['birth_date'])) {
+                            $birthDate = new DateTime($user['birth_date']);
+                            echo '<p>Birth Date: ' . $birthDate->format('M d, Y') . '</p>';
+                        } else {
+                            echo '<p>Birth Date: Not Provided</p>';
+                        }
+                    ?>
+                </div>
+                <div>
+                    <h3 class="font-bold">Contact Information</h3>
+                    <p>Address: <?= isset($user['address']) ? $user['address'] : 'Not Provided' ?></p>
+                    <p>Civil Status: <?= isset($user['civil_status']) ? capitalizeStatus($user['civil_status']) : 'Not Provided' ?></p>
+                    <p>Citizenship: <?= $user['citizenship'] ?></p>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
 
     <!-- Edit Information Modal -->
-    <!-- Edit Information Modal -->
-<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center">
+    <div id="editModal" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg w-full max-w-2xl">
         <h2 class="text-xl font-bold mb-4">Edit Information</h2>
         <form id="editForm" method="POST"> <!-- Removed action for AJAX handling -->
@@ -121,7 +134,7 @@ if (!$user) {
                 </div>
                 <div class="col-span-1">
                     <label for="birth_date" class="block">Birth Date</label>
-                    <input type="date" name="birth_date" id="birth_date" class="p-2 border rounded w-full" value="<?= $user['birth_date'] ?? '' ?>" required>
+                    <input type="date" name="birth_date" id="birth_date" class="p-2 border rounded w-full" value="<?= isset($user['birth_date']) ? (new DateTime($user['birth_date']))->format('YYYY-MM-DD') : '' ?>" required>
                 </div>
             </div>
 
