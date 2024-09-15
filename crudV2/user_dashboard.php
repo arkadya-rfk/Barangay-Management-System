@@ -35,80 +35,109 @@ if (!$user) {
     <title>User Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .sidebar-open { transform: translateX(0); }
-        .sidebar-closed { transform: translateX(-100%); }
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 80vh;
+            margin-top: 40px;
+        }
+
+        #sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 250px;
+            background-color: #1E40AF;
+            transition: transform 0.3s ease;
+            transform: translateX(-250px);
+        }
+
+        #sidebar.active {
+            transform: translateX(0);
+        }
+
+        #avatar-only
+        .sidebar-avatar {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        #avatar-only.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="bg-blue-50">
 
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed top-0 left-0 h-screen w-64 bg-blue-700 text-white p-6 sidebar-open transition-transform duration-300">
-    <div class="flex items-center justify-between">
-        <h2 class="text-2xl font-bold">User Menu</h2>
-        <button onclick="toggleSidebar()"></button>
+    <div id="sidebar" class="bg-blue-800 text-white p-5 transition-transform rounded-r-lg">
+        <div class="flex items-center">
+            <img id="sidebar-avatar" src="8.png" alt="User Avatar" class="sidebar-avatar w-20 h-20 rounded-full cursor-pointer">
+            <h2 class="ml-4 text-xl font-bold"><?= $user['first_name'] ?? 'User' ?></h2>
+        </div>
+        <ul class="mt-10">
+            <li class="mb-4"><a href="user_dashboard.php" class="text-white hover:text-black font-bold">Profile</a></li>
+            <li class="mb-4"><a href="javascript:void(0)" class="text-white hover:text-black hover:font-bold" onclick="toggleModal()">Edit Profile</a></li>
+            <li class="mb-4"><a href="logout.php" class="text-white hover:text-black hover:font-bold">Log Out</a></li>
+        </ul>
     </div>
-    <ul class="mt-6">
-        <li class="mb-4"><a href="user_dashboard.php" class="text-white hover:text-black font-bold">Profile</a></li>
-        <li class="mb-4"><a href="javascript:void(0)" class="text-white hover:text-black hover:font-bold" onclick="toggleModal()">Edit Profile</a></li> <!-- Edit Profile triggers modal -->
-        <li class="mb-4"><a href="#" class="text-white hover:text-black hover:font-bold">Request Document</a></li>
-        <li class="mb-4"><a href="logout.php" class="text-white hover:text-black hover:font-bold">Log Out</a></li>
-    </ul>
-</div>
 
+    <!-- Avatar for toggling the sidebar -->
+    <div id="avatar-only" class="p-5 cursor-pointer">
+        <img src="7.png" alt="User Avatar" class="w-20 h-20 rounded-full">
+    </div>
 
-
+    
     <?php if (isset($_GET['update'])): ?>
     <div class="p-4 mb-4 text-sm <?= $_GET['update'] == 'success' ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100' ?> rounded-lg" role="alert">
         <?= $_GET['update'] == 'success' ? 'User information updated successfully!' : 'An error occurred while updating user information.' ?>
     </div>
-<?php endif; ?>
+    <?php endif; ?>
 
-    <!-- Main Content -->
-    <div class="ml-0 lg:ml-64 transition-all duration-300">
-    <div class="p-6">
-        <div class="bg-white p-4 rounded-lg shadow-md">
-            <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold">User Dashboard</h1>
-                <!-- Removed Edit Information button here -->
+
+        <div class="flex items-center justify-between lg:ml-72 mt-12 transition-all duration-300">
+                <h1 class="text-2xl font-bold">Pofile Dashboard</h1>
             </div>
-
-            <!-- User Info -->
-            <div class="mt-6 flex flex-col items-center">
-                <img src="au.jpg" alt="Profile" class="w-36 h-36 rounded-full">
-                <h2 class="text-lg font-bold mt-4">
+            
+     <!-- Main Content -->
+     <div id="content" class="content p-6 lg:ml-64">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-center">
+                <img src="au.jpg" alt="Profile" class="w-36 h-36 rounded-full mx-auto">
+                <h2 class="text-2xl font-bold mt-4">
                     <?= isset($user['first_name']) && isset($user['last_name']) ? $user['first_name'] . " " . $user['middle_name'] . " " . $user['last_name'] : 'Name Not Available' ?>
                 </h2>
-                <p>Username: <?= isset($user['email']) ? $user['email'] : 'Email Not Available' ?></p>
-                <p>Email: <?= isset($user['user_email']) ? $user['user_email'] : 'Email Not Available' ?></p>
-                <p>Contact Number: <?= isset($user['contact']) ? $user['contact'] : 'Not Provided' ?></p>
+                <p class="mt-2">Username: <?= $user['email'] ?? 'Email Not Available' ?></p>
+                <p>Email: <?= $user['user_email'] ?? 'Email Not Available' ?></p>
+                <p>Contact Number: <?= $user['contact'] ?? 'Not Provided' ?></p>
             </div>
+        </div>
 
-            <!-- Contact Info -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                <div>
-                    <h3 class="font-bold">User Information</h3>
-                    <p>First Name: <?= $user['first_name'] ?></p>
-                    <p>Middle Name: <?= $user['middle_name'] ?></p>
-                    <p>Last Name: <?= $user['last_name'] ?></p>
-                    <?php
-                        if (isset($user['birth_date'])) {
-                            $birthDate = new DateTime($user['birth_date']);
-                            echo '<p>Birth Date: ' . $birthDate->format('M d, Y') . '</p>';
-                        } else {
-                            echo '<p>Birth Date: Not Provided</p>';
-                        }
-                    ?>
-                </div>
-                <div>
-                    <h3 class="font-bold">Contact Information</h3>
-                    <p>Address: <?= isset($user['address']) ? $user['address'] : 'Not Provided' ?></p>
-                    <p>Civil Status: <?= isset($user['civil_status']) ? capitalizeStatus($user['civil_status']) : 'Not Provided' ?></p>
-                    <p>Citizenship: <?= $user['citizenship'] ?></p>
-                </div>
+        <!-- User Information -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="font-bold mb-4 text-2xl">User Information</h3>
+                <p>First Name: <?= $user['first_name'] ?></p>
+                <p>Middle Name: <?= $user['middle_name'] ?></p>
+                <p>Last Name: <?= $user['last_name'] ?></p>
+                <p>
+                    Birth Date: 
+                    <?= isset($user['birth_date']) ? (new DateTime($user['birth_date']))->format('M d, Y') : 'Not Provided' ?>
+                </p>
+                <h3 class="font-bold mt-6 mb-4 text-2xl">Contact Information</h3>
+                <p>Address: <?= $user['address'] ?? 'Not Provided' ?></p>
+                <p>Civil Status: <?= isset($user['civil_status']) ? capitalizeStatus($user['civil_status']) : 'Not Provided' ?></p>
+                <p>Citizenship: <?= $user['citizenship'] ?></p>
             </div>
         </div>
     </div>
-</div>
 
 
 
@@ -150,74 +179,60 @@ if (!$user) {
             
             <div class="mt-4">
                 <label for="contact" class="block">Contact Number</label>
-                <input type="text" name="contact" id="contact" class="p-2 border rounded w-full" value="<?= $user['contact'] ?? '' ?>" required>
-            </div>
-            <div class="mt-4">
-                <label for="address" class="block">Address</label>
-                <input type="text" name="address" id="address" class="p-2 border rounded w-full" value="<?= $user['address'] ?? '' ?>" required>
-            </div>
-            <div class="mt-4">
-                <label for="civil_status" class="block">Civil Status</label>
-                <select name="civil_status" id="civil_status" class="p-2 border rounded w-full" required>
-                    <option value="Single" <?= $user['civil_status'] == 'Single' ? 'selected' : '' ?>>Single</option>
-                    <option value="Married" <?= $user['civil_status'] == 'Married' ? 'selected' : '' ?>>Married</option>
-                    <option value="Divorced" <?= $user['civil_status'] == 'Divorced' ? 'selected' : '' ?>>Divorced</option>
-                    <option value="Not to say" <?= $user['civil_status'] == 'Not to say' ? 'selected' : '' ?>>Prefer not to say</option>
-                </select>
+                <input type="text" name="contact" id="contact" class="p-2 border rounded w-full" value="<?= $user['contact'] ?>">
             </div>
 
-            <div class="flex justify-between mt-6">
-                <button type="button" class="bg-gray-300 px-4 py-2 rounded" onclick="toggleModal()">Cancel</button>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
+            <div class="mt-4">
+                <label for="address" class="block">Address</label>
+                <textarea name="address" id="address" rows="3" class="p-2 border rounded w-full"><?= $user['address'] ?></textarea>
+            </div>
+
+            <div class="mt-6 text-right">
+                <button type="button" onclick="toggleModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">Cancel</button>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Save Changes</button>
             </div>
         </form>
     </div>
 </div>
 
-    
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+        const avatarOnly = document.getElementById('avatar-only');
+        avatarOnly.classList.toggle('hidden');
+    }
 
-    <script>
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('sidebar-closed');
-            document.getElementById('sidebar').classList.toggle('sidebar-open');
-        }
+    document.getElementById('sidebar-avatar').addEventListener('click', toggleSidebar);
+    document.getElementById('avatar-only').addEventListener('click', toggleSidebar);
 
-        function toggleModal() {
-            document.getElementById('editModal').classList.toggle('hidden');
-        }
+    function toggleModal() {
+        document.getElementById('editModal').classList.toggle('hidden');
+    }
 
-        document.getElementById('editForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent default form submission
+    // Handle form submission via AJAX
+    document.getElementById('editForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
 
-    const formData = new FormData(this); // Gather the form data
-
-    // Send the AJAX request to edit_user.php
-    fetch('edit_user.php', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest' // To check if request is AJAX in PHP
-        }
-    })
-    .then(response => response.text())  // Process the response as text
-    .then(data => {
-        console.log("Server Response:", data);  // Log the server's response to the console
-        if (data.trim() === 'success') {
-            // Hide the modal after success and reload the page
-            toggleModal();
-            location.reload(); // This will reload the page and fetch updated user info
-        } else {
-            // Handle errors and display feedback to the user
-            alert('Error updating user information: ' + data);  // Display the error message
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error); // Log errors to the console
-        alert('An error occurred while submitting the form.');
+        fetch('update_user.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            if (data === 'success') {
+                window.location.href = 'user_dashboard.php?update=success';
+            } else {
+                window.location.href = 'user_dashboard.php?update=error';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            window.location.href = 'user_dashboard.php?update=error';
+        });
     });
-});
-
-    </script>
+</script>
 
 </body>
 </html>
