@@ -8,3 +8,4 @@
 
 <strong>Barangay Management System</strong>
  
+<p><i>Barangay Management System (BMS) is a digital platform designed to streamline and automate the administrative functions of a barangay. This system aims to centralize data management, improve record-keeping, and facilitate better communication between barangay officials and residents</i></p>
