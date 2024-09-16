@@ -72,6 +72,21 @@ if (!$user) {
             opacity: 0;
             pointer-events: none;
         }
+
+        /* Hidden sections initially */
+        .section-content {
+            display: none;
+        }
+
+        /* Show active section */
+        .section-content.active {
+            display: block;
+        }
+
+        .active-link {
+    color: black !important; /* Ensure that the active link text is always black */
+    font-weight: bold; /* Keep the bold style */
+}
     </style>
 </head>
 <body class="bg-blue-50">
@@ -97,47 +112,58 @@ if (!$user) {
     
     <?php if (isset($_GET['update'])): ?>
     <div class="p-4 mb-4 text-sm <?= $_GET['update'] == 'success' ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100' ?> rounded-lg" role="alert">
-        <?= $_GET['update'] == 'success' ? 'User information updated successfully!' : 'An error occurred while updating user information.' ?>
+       <p class ="font-bold text-l" ><?= $_GET['update'] == 'success' ? 'User information updated successfully!' : 'An error occurred while updating user information.' ?></p>
     </div>
     <?php endif; ?>
 
 
         <div class="flex items-center justify-between lg:ml-72 mt-12 transition-all duration-300">
-                <h1 class="text-2xl font-bold">Pofile Dashboard</h1>
+                <h1 class="text-2xl font-bold">Profile Dashboard</h1>
             </div>
-            
-     <!-- Main Content -->
-     <div id="content" class="content p-6 lg:ml-64">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="text-center">
-                <img src="au.jpg" alt="Profile" class="w-36 h-36 rounded-full mx-auto">
-                <h2 class="text-2xl font-bold mt-4">
-                    <?= isset($user['first_name']) && isset($user['last_name']) ? $user['first_name'] . " " . $user['middle_name'] . " " . $user['last_name'] : 'Name Not Available' ?>
-                </h2>
-                <p class="mt-2">Username: <?= $user['email'] ?? 'Email Not Available' ?></p>
-                <p>Email: <?= $user['user_email'] ?? 'Email Not Available' ?></p>
-                <p>Contact Number: <?= $user['contact'] ?? 'Not Provided' ?></p>
-            </div>
+        
+            <div id="content" class="content p-6 lg:ml-64">
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <img src="au.jpg" alt="Profile" class="w-36 h-36 rounded-full mx-auto">
+            <h2 class="text-2xl font-bold mt-4">
+                <?= isset($user['first_name']) && isset($user['last_name']) ? $user['first_name'] . " " . $user['middle_name'] . " " . $user['last_name'] : 'Name Not Available' ?>
+            </h2>
         </div>
 
-        <!-- User Information -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="font-bold mb-4 text-2xl">User Information</h3>
-                <p>First Name: <?= $user['first_name'] ?></p>
-                <p>Middle Name: <?= $user['middle_name'] ?></p>
-                <p>Last Name: <?= $user['last_name'] ?></p>
-                <p>
-                    Birth Date: 
-                    <?= isset($user['birth_date']) ? (new DateTime($user['birth_date']))->format('M d, Y') : 'Not Provided' ?>
-                </p>
-                <h3 class="font-bold mt-6 mb-4 text-2xl">Contact Information</h3>
-                <p>Address: <?= $user['address'] ?? 'Not Provided' ?></p>
-                <p>Civil Status: <?= isset($user['civil_status']) ? capitalizeStatus($user['civil_status']) : 'Not Provided' ?></p>
-                <p>Citizenship: <?= $user['citizenship'] ?></p>
-            </div>
+        <!-- Nav Menus -->
+        <div class="bg-blue-100 p-4 rounded-lg shadow-md mt-6">
+            <ul class="flex justify-center space-x-6">
+                <li id="account-link"><a href="javascript:void(0)" class="nav-link text-blue-600 font-bold hover:text-black" onclick="showSection('account')">Account Center</a></li>
+                <li id="user-info-link"><a href="javascript:void(0)" class="nav-link text-blue-600 font-bold hover:text-black" onclick="showSection('user-info')">User Information</a></li>
+                <li id="contact-info-link"><a href="javascript:void(0)" class="nav-link text-blue-600 font-bold hover:text-black" onclick="showSection('contact-info')">Contact Information</a></li>
+            </ul>
+         </div>
+
+        <!-- Account Center Section -->
+        <div id="account" class="section-content bg-white p-6 rounded-lg shadow-md mt-6">
+            <h3 class="font-bold mb-4 text-2xl">Account Center</h3>
+            <p>Username: <?= $user['email'] ?? 'Username Not Available' ?></p>
+            <p>Email: <?= $user['user_email'] ?? 'Email Not Available' ?></p>
+        </div>
+
+        <div id="user-info" class="section-content bg-white p-6 rounded-lg shadow-md mt-6">
+            <h3 class="font-bold mb-4 text-2xl">User Information</h3>
+            <p>First Name: <?= $user['first_name'] ?></p>
+            <p>Middle Name: <?= $user['middle_name'] ?></p>
+            <p>Last Name: <?= $user['last_name'] ?></p>
+            <p>Birth Date: <?= isset($user['birth_date']) ? (new DateTime($user['birth_date']))->format('M d, Y') : 'Not Provided' ?></p>
+            <p>Gender: <?= isset($user['gender']) ? ucfirst($user['gender']) : 'Not Provided' ?></p> <!-- Added gender -->
+        </div>
+
+        <!-- Contact Information Section -->
+        <div id="contact-info" class="section-content bg-white p-6 rounded-lg shadow-md mt-6">
+            <h3 class="font-bold mb-4 text-2xl">Contact Information</h3>
+            <p>Contact Number: <?= $user['contact'] ?? 'Not Provided' ?></p>
+            <p>Address: <?= $user['address'] ?? 'Not Provided' ?></p>
+            <p>Civil Status: <?= ($user['civil_status']) ? capitalizeStatus($user['civil_status']) : 'Not Provided' ?></p>
+            <p>Citizenship: <?= $user['citizenship'] ?></p>
         </div>
     </div>
+</div>
 
 
 
@@ -187,6 +213,27 @@ if (!$user) {
                 <textarea name="address" id="address" rows="3" class="p-2 border rounded w-full"><?= $user['address'] ?></textarea>
             </div>
 
+             <!-- Add Gender Field -->
+             <div class="mt-4">
+                <label for="gender" class="block">Gender</label>
+                <select name="gender" id="gender" class="w-full p-2 border rounded" required>
+                    <option value="Male" <?= $user['gender'] === 'male' ? 'selected' : '' ?>>Male</option>
+                    <option value="Female" <?= $user['gender'] === 'female' ? 'selected' : '' ?>>Female</option>
+                    <option value="Other" <?= $user['gender'] === 'other' ? 'selected' : '' ?>>Other</option>
+                </select>
+            </div>
+
+            <!-- Add Civil Status Field -->
+            <div class="mt-4">
+                <label for="civil_status" class="block">Civil Status</label>
+                <select name="civil_status" id="civil_status" class="w-full p-2 border rounded" required>
+                    <option value="Single" <?= $user['gender'] === 'Single' ? 'selected' : '' ?>>Single</option>
+                    <option value="Married" <?= $user['gender'] === 'Married' ? 'selected' : '' ?>>Married</option>
+                    <option value="Divorced" <?= $user['gender'] === 'Divorced' ? 'selected' : '' ?>>Divorced</option>
+                    <option value="Not to say" <?= $user['gender'] === 'Not to say' ? 'selected' : '' ?>>Not to Say</option>
+                </select>
+            </div>
+
             <div class="mt-6 text-right">
                 <button type="button" onclick="toggleModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">Cancel</button>
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Save Changes</button>
@@ -215,23 +262,63 @@ if (!$user) {
         e.preventDefault();
         const formData = new FormData(this);
 
-        fetch('update_user.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            if (data === 'success') {
-                window.location.href = 'user_dashboard.php?update=success';
-            } else {
-                window.location.href = 'user_dashboard.php?update=error';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+    fetch('edit_user.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data === 'success') {
+            window.location.href = 'user_dashboard.php?update=success';
+        } else {
+            alert('An error occurred: ' + data);  // Output the specific error
             window.location.href = 'user_dashboard.php?update=error';
-        });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        window.location.href = 'user_dashboard.php?update=error';
     });
+});
+
+    function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section-content');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Initially show Account Center
+        showSection('account');
+
+
+        function showSection(section) {
+    // Hide all sections
+    document.getElementById('account').style.display = 'none';
+    document.getElementById('user-info').style.display = 'none';
+    document.getElementById('contact-info').style.display = 'none';
+
+    // Show the selected section
+    document.getElementById(section).style.display = 'block';
+
+    // Remove active class from all nav links
+    let navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.classList.remove('active-link'); // Custom active class
+        link.style.color = ''; // Reset text color
+    });
+
+    // Add active class to the clicked link
+    if (section === 'account') {
+        document.querySelector('#account-link a').classList.add('active-link');
+        document.querySelector('#account-link a').style.color = 'black'; // Set active text color
+    } else if (section === 'user-info') {
+        document.querySelector('#user-info-link a').classList.add('active-link');
+        document.querySelector('#user-info-link a').style.color = 'black';
+    } else if (section === 'contact-info') {
+        document.querySelector('#contact-info-link a').classList.add('active-link');
+        document.querySelector('#contact-info-link a').style.color = 'black';
+    }
+}
 </script>
 
 </body>
