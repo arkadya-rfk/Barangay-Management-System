@@ -227,10 +227,10 @@ if (!$user) {
             <div class="mt-4">
                 <label for="civil_status" class="block">Civil Status</label>
                 <select name="civil_status" id="civil_status" class="w-full p-2 border rounded" required>
-                    <option value="Single" <?= $user['gender'] === 'Single' ? 'selected' : '' ?>>Single</option>
-                    <option value="Married" <?= $user['gender'] === 'Married' ? 'selected' : '' ?>>Married</option>
-                    <option value="Divorced" <?= $user['gender'] === 'Divorced' ? 'selected' : '' ?>>Divorced</option>
-                    <option value="Not to say" <?= $user['gender'] === 'Not to say' ? 'selected' : '' ?>>Not to Say</option>
+                    <option value="Single" <?= $user['civil_status'] === 'Single' ? 'selected' : '' ?>>Single</option>
+                    <option value="Married" <?= $user['civil_status'] === 'Married' ? 'selected' : '' ?>>Married</option>
+                    <option value="Divorced" <?= $user['civil_status'] === 'Divorced' ? 'selected' : '' ?>>Divorced</option>
+                    <option value="Not to say" <?= $user['civil_status'] === 'Not to say' ? 'selected' : '' ?>>Not to Say</option>
                 </select>
             </div>
 
