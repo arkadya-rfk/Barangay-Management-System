@@ -123,7 +123,7 @@ if (!$user) {
         
             <div id="content" class="content p-6 lg:ml-64">
         <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <img src="au.jpg" alt="Profile" class="w-36 h-36 rounded-full mx-auto">
+            <img src="ambot.jpeg" alt="Profile" class="w-36 h-36 rounded-full mx-auto">
             <h2 class="text-2xl font-bold mt-4">
                 <?= isset($user['first_name']) && isset($user['last_name']) ? $user['first_name'] . " " . $user['middle_name'] . " " . $user['last_name'] : 'Name Not Available' ?>
             </h2>
@@ -159,6 +159,7 @@ if (!$user) {
             <h3 class="font-bold mb-4 text-2xl">Contact Information</h3>
             <p>Contact Number: <?= $user['contact'] ?? 'Not Provided' ?></p>
             <p>Address: <?= $user['address'] ?? 'Not Provided' ?></p>
+            <p>Achieved Status: <?= ($user['achieved_status']) ? capitalizeStatus($user['achieved_status']) : 'Not Provided' ?></p>
             <p>Civil Status: <?= ($user['civil_status']) ? capitalizeStatus($user['civil_status']) : 'Not Provided' ?></p>
             <p>Citizenship: <?= $user['citizenship'] ?></p>
         </div>
@@ -189,7 +190,8 @@ if (!$user) {
                 </div>
                 <div class="col-span-1">
                     <label for="birth_date" class="block">Birth Date</label>
-                    <input type="date" name="birth_date" id="birth_date" class="p-2 border rounded w-full" value="<?= isset($user['birth_date']) ? (new DateTime($user['birth_date']))->format('YYYY-MM-DD') : '' ?>" required>
+                    <input type="date" name="birth_date" id="birth_date" class="p-2 border rounded w-full" 
+                    value="<?= isset($user['birth_date']) ? (new DateTime($user['birth_date']))->format('Y-m-d') : '' ?>" required>
                 </div>
             </div>
 
@@ -220,6 +222,16 @@ if (!$user) {
                     <option value="Male" <?= $user['gender'] === 'male' ? 'selected' : '' ?>>Male</option>
                     <option value="Female" <?= $user['gender'] === 'female' ? 'selected' : '' ?>>Female</option>
                     <option value="Other" <?= $user['gender'] === 'other' ? 'selected' : '' ?>>Other</option>
+                </select>
+            </div>
+
+            <!-- Add Achieved Status Field -->
+            <div class="mt-4">
+                <label for="achieved_status" class="block">Civil Status</label>
+                <select name="achieved_status" id="achieved_status" class="w-full p-2 border rounded" required>
+                    <option value="Student" <?= $user['achieved_status'] === 'Student' ? 'selected' : '' ?>>Student</option>
+                    <option value="Employed" <?= $user['achieved_status'] === 'Employed' ? 'selected' : '' ?>>Employed</option>
+                    <option value="Unemployed" <?= $user['achieved_status'] === 'Unemployed' ? 'selected' : '' ?>>Unemployed</option>
                 </select>
             </div>
 

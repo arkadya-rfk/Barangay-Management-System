@@ -127,7 +127,6 @@ try {
         <ul class="mt-16">
             <li class="mb-4"><a href="admin.php" class="text-white hover:text-black font-bold">Home</a></li>
             <li class="mb-4"><a href="#" class="text-white hover:text-black hover:font-bold">Pending Approvals</a></li>
-            <li class="mb-4"><a href="#" class="text-white hover:text-black hover:font-bold">Verified Residents</a></li>
             <li class="mb-4"><a href="logout.php" class="text-white hover:text-black hover:font-bold">Log Out</a></li>
         </ul>
     </div>
