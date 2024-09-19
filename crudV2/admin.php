@@ -36,10 +36,11 @@ try {
 
     // Handle search query
     $search_results = [];
-    if (isset($_GET['search'])) {
+    $search_term = '';
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
         $search_term = $conn->real_escape_string($_GET['search']);
         $search_query = $conn->query("
-            SELECT first_name, middle_name, last_name, email 
+            SELECT first_name, middle_name, last_name, email, address
             FROM users 
             WHERE first_name LIKE '%$search_term%' 
             AND role != 'admin'
@@ -114,6 +115,9 @@ try {
         #back-btn {
             display: none;
         }
+        .widget { width: 400px; }
+
+        #results, #back-btn { display: none; }
     </style>
 </head>
 <body class="bg-gray-50 relative">
@@ -132,15 +136,13 @@ try {
     </div>
 
     <!-- Avatar for toggling the sidebar -->
-    <div id="avatar-only" class="p-5 cursor-pointer">
-        <img src="7.png" alt="Admin Avatar" class="w-20 h-20 rounded-full">
-    </div>
+        <div id="avatar-only" class="p-5 cursor-pointer">
+            <img src="7.png" alt="Admin Avatar" class="w-20 h-20 rounded-full">
+        </div>
 
     <!-- Main content with Search -->
-    <div class="center-content">
-        <h1 class="text-3xl font-bold mb-10 mt-20">Barangay Management System</h1>
-        <!-- Error Message -->
-        <div id="error-message" class="bg-red-500 text-white font-bold px-6 py-4 rounded shadow-lg mb-8" style="display: none;">Please enter in the search box.</div>
+        <div class="center-content">
+            <h1 class="text-3xl font-bold mb-10 mt-20">Barangay Management System</h1>
 
         <!-- Back button (hidden initially) -->
         <button id="back-btn" class="mb-4 p-2 bg-gray-500 text-white rounded">Back to Dashboard</button>
@@ -150,6 +152,47 @@ try {
             <input type="text" id="search-box" placeholder="Search by First name" class="border rounded-lg p-2 w-96">
             <button id="search-btn" class="ml-4 p-2 bg-blue-500 text-white rounded">Search</button>
         </div>
+
+        <!-- Display search results -->
+        <div id="results">
+            <h2 class="text-2xl font-bold mb-4">Search Results:</h2>
+
+            <?php if (!empty($search_term)): ?>
+                <?php if (empty($search_results)): ?>
+                    <p>No results found for "<?php echo htmlspecialchars($search_term); ?>"</p>
+                <?php else: ?>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <?php foreach ($search_results as $result): ?>
+                            <div class="bg-white shadow-lg p-4 rounded-lg cursor-pointer" 
+                                 onclick="showUserDetails(<?php echo htmlspecialchars(json_encode($result)); ?>)">
+                                <p class="font-bold text-lg">
+                                    <?php 
+                                        echo htmlspecialchars($result['first_name']) . ' ' . htmlspecialchars($result['middle_name']) . ' ' . htmlspecialchars($result['last_name']); 
+                                    ?>
+                                </p>
+                                <p>Username: <?php echo htmlspecialchars($result['email']); ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+
+
+        <!-- User Details Modal (Hidden by default) -->
+        <div id="userDetailsModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-8 rounded-lg w-1/3">
+                <button class="bg-red-500 text-white px-4 py-2 rounded-md mb-4" onclick="closeModal()">Close</button>
+                <h3 class="text-2xl font-bold mb-4" id="userFullName"></h3>
+                <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                <p><strong>First Name:</strong> <span id="userFirstName"></span></p>
+                <p><strong>Middle Name:</strong> <span id="userMiddleName"></span></p>
+                <p><strong>Last Name:</strong> <span id="userLastName"></span></p>
+                <p><strong>Address:</strong> <span id="userAddress"></span></p>
+                <!-- Add more fields as needed -->
+            </div>
+        </div>
+
 
         <!-- Dashboard widgets -->
         <div id="dashboard" class="grid grid-cols-3 gap-6">
@@ -197,29 +240,6 @@ try {
                 </div>
             </div>
         </div>
-
-        <!-- Search Results -->
-        <div id="results">
-            <h2 class="text-2xl font-bold mb-4">Search Results:</h2>
-            <ul>
-                <?php if (isset($_GET['search'])): ?>
-                    <?php if (empty($search_results)): ?>
-                        <p>No results found for "<?php echo htmlspecialchars($search_term); ?>"</p>
-                    <?php else: ?>
-                        <?php foreach ($search_results as $result): ?>
-                            <li>
-                                <p class="font-bold">
-                                    <?php 
-                                        echo htmlspecialchars($result['first_name']) . ' ' . htmlspecialchars($result['middle_name']) . ' ' . htmlspecialchars($result['last_name']); 
-                                    ?>
-                                </p>
-                                <p>Username: <?php echo htmlspecialchars($result['email']); ?></p>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </ul>
-        </div>
     </div>
 
     <script>
@@ -244,36 +264,55 @@ try {
             avatar.classList.remove('hidden');
         });
 
-        // Function to perform search
-        function performSearch() {
-    const searchTerm = searchBox.value.trim();
-
-    if (!searchTerm) {
-        errorMessage.style.display = 'block'; // Show the error message
-        return;
-    }
-
-    errorMessage.style.display = 'none'; // Hide the error message
-    window.location.href = `?search=${encodeURIComponent(searchTerm)}`;
-}
-
-
-        // Search on button click
-        searchBtn.addEventListener('click', performSearch);
-
-        // Search on Enter key press
-        searchBox.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                performSearch();
-            }
-        });
-
-        // Show search results and hide dashboard when a search is performed
-        <?php if (isset($_GET['search'])): ?>
+              // Display search results when there are any
+              <?php if (!empty($search_term)): ?>
             dashboard.style.display = 'none';
             results.style.display = 'block';
             backBtn.style.display = 'block';
+            searchBox.value = '<?php echo htmlspecialchars($search_term); ?>';
         <?php endif; ?>
+
+        // Function to perform search
+        function performSearch() {
+            const searchTerm = searchBox.value.trim();
+            if (searchTerm) {
+                window.location.href = `admin.php?search=${encodeURIComponent(searchTerm)}`;
+            } else {
+                alert("Please enter in search box.");
+            }
+        }
+
+        // Search button functionality
+        searchBtn.addEventListener('click', performSearch);
+
+        // Back button functionality
+        backBtn.addEventListener('click', () => {
+            dashboard.style.display = 'grid';
+            results.style.display = 'none';
+            backBtn.style.display = 'none';
+            searchBox.value = '';
+        });
+
+    // Function to display user details in a modal
+        function showUserDetails(user) {
+    // Fill in user details in the modal
+    document.getElementById('userFullName').innerText = user.first_name + ' ' + user.middle_name + ' ' + user.last_name;
+    document.getElementById('userEmail').innerText = user.email;
+    document.getElementById('userFirstName').innerText = user.first_name;
+    document.getElementById('userMiddleName').innerText = user.middle_name;
+    document.getElementById('userLastName').innerText = user.last_name;
+    document.getElementById('userAddress').innerText = user.address;
+
+    // Show the modal
+    document.getElementById('userDetailsModal').classList.remove('hidden');
+}
+
+    // Function to close the modal
+    function closeModal() {
+    document.getElementById('userDetailsModal').classList.add('hidden');
+}
+
+
 
         // Back button functionality
         backBtn.addEventListener('click', () => {
