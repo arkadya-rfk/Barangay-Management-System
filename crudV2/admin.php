@@ -63,62 +63,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .center-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            min-height: 80vh;
-            margin-top: 40px;
-        }
-
-        #sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            height: 100vh;
-            width: 250px;
-            background-color: #1E40AF;
-            transition: transform 0.3s ease;
-            transform: translateX(-250px);
-        }
-
-        #sidebar.active {
-            transform: translateX(0);
-        }
-
-        #avatar-only
-        .sidebar-avatar {
-            position: fixed;
-            top: 40px;
-            left: 40px;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-        }
-
-        #avatar-only.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .widget {
-            width: 400px;
-        }
-
-        /* Hide results div initially */
-        #results {
-            display: none;
-        }
-
-        /* Hide back button initially */
-        #back-btn {
-            display: none;
-        }
-        .widget { width: 400px; }
-
-        #results, #back-btn { display: none; }
-    </style>
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body class="bg-gray-50 relative">
 
@@ -130,7 +75,7 @@ try {
         </div>
         <ul class="mt-16">
             <li class="mb-4"><a href="admin.php" class="text-white hover:text-black font-bold">Home</a></li>
-            <li class="mb-4"><a href="#" class="text-white hover:text-black hover:font-bold">Pending Approvals</a></li>
+            <li class="mb-4"><a href="residents.php" class="text-white hover:text-black hover:font-bold">List of Residents</a></li>
             <li class="mb-4"><a href="logout.php" class="text-white hover:text-black hover:font-bold">Log Out</a></li>
         </ul>
     </div>
@@ -311,9 +256,6 @@ try {
     function closeModal() {
     document.getElementById('userDetailsModal').classList.add('hidden');
 }
-
-
-
         // Back button functionality
         backBtn.addEventListener('click', () => {
             dashboard.style.display = 'grid';

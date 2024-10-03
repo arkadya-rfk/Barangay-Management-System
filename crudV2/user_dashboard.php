@@ -34,60 +34,7 @@ if (!$user) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .center-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            min-height: 80vh;
-            margin-top: 40px;
-        }
-
-        #sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            height: 100vh;
-            width: 250px;
-            background-color: #1E40AF;
-            transition: transform 0.3s ease;
-            transform: translateX(-250px);
-        }
-
-        #sidebar.active {
-            transform: translateX(0);
-        }
-
-        #avatar-only
-        .sidebar-avatar {
-            position: fixed;
-            top: 40px;
-            left: 40px;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-        }
-
-        #avatar-only.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* Hidden sections initially */
-        .section-content {
-            display: none;
-        }
-
-        /* Show active section */
-        .section-content.active {
-            display: block;
-        }
-
-        .active-link {
-    color: black !important; /* Ensure that the active link text is always black */
-    font-weight: bold; /* Keep the bold style */
-}
-    </style>
+    <link rel="stylesheet" href="user.css">
 </head>
 <body class="bg-blue-50">
 
