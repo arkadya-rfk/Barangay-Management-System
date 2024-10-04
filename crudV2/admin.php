@@ -146,42 +146,48 @@ try {
                 <img src="1.png" alt="Residents Icon" class="w-12 h-12 mr-6">
                 <div>
                     <h2 class="text-xl font-bold">Residents</h2>
-                    <p class="mt-4 text-2xl"><?php echo htmlspecialchars($residents_count); ?></p>
+                    <p class="mt-4 text-2xl mb-2"><?php echo htmlspecialchars($residents_count); ?></p>
+                    <a class="mt-2 text-s font-bold" style="color:blue;" href="residents.php">View all</a>
                 </div>
             </div>
             <div class="bg-white p-6 rounded-lg shadow flex items-center widget">
                 <img src="3.png" alt="Male Icon" class="w-16 h-16 mr-6">
                 <div>
-                    <h2 class="text-xl font-bold">Male</h2>
-                    <p class="mt-4 text-2xl"><?php echo htmlspecialchars($males_count); ?></p>
+                    <h2 class="text-xl font-bold"><a href="residents.php">Male</a></h2>
+                    <p class="mt-4 text-2xl mb-2"><?php echo htmlspecialchars($males_count); ?></p>
+                    <a class="mt-2 text-s font-bold" style="color:blue;" href="residents.php?filter=male">View all</a>
                 </div>
             </div>
             <div class="bg-white p-6 rounded-lg shadow flex items-center widget">
                 <img src="4.png" alt="Female Icon" class="w-16 h-16 mr-6">
                 <div>
                     <h2 class="text-xl font-bold">Female</h2>
-                    <p class="mt-4 text-2xl"><?php echo htmlspecialchars($females_count); ?></p>
+                    <p class="mt-4 text-2xl mb-2"><?php echo htmlspecialchars($females_count); ?></p>
+                    <a class="mt-2 text-s font-bold" style="color:blue;" href="residents.php?filter=female">View all</a>
                 </div>
             </div>
             <div class="bg-white p-6 rounded-lg shadow flex items-center widget">
                 <img src="2.png" alt="Students Icon" class="w-14 h-14 mr-4">
                 <div>
                     <h2 class="text-xl font-bold">Students</h2>
-                    <p class="mt-4 text-2xl"><?php echo htmlspecialchars($students_count); ?></p>
+                    <p class="mt-4 text-2xl mb-2"><?php echo htmlspecialchars($students_count); ?></p>
+                    <a class="mt-2 text-s font-bold" style="color:blue;" href="residents.php?filter=students">View all</a>
                 </div>
             </div>
             <div class="bg-white p-6 rounded-lg shadow flex items-center widget">
                 <img src="5.png" alt="Employed Icon" class="w-14 h-14 mr-6 ml-2">
                 <div>
                     <h2 class="text-xl font-bold">Employed</h2>
-                    <p class="mt-4 text-2xl"><?php echo htmlspecialchars($employed_count); ?></p>
+                    <p class="mt-4 text-2xl mb-2"><?php echo htmlspecialchars($employed_count); ?></p>
+                    <a class="mt-2 text-s font-bold" style="color:blue;" href="residents.php?filter=employed">View all</a>
                 </div>
             </div>
             <div class="bg-white p-6 rounded-lg shadow flex items-center widget">
                 <img src="6.png" alt="Unemployed Icon" class="w-14 h-14 mr-6 ml-2">
                 <div>
                     <h2 class="text-xl font-bold">Unemployed</h2>
-                    <p class="mt-4 text-2xl"><?php echo htmlspecialchars($unemployed_count); ?></p>
+                    <p class="mt-4 text-2xl mb-2"><?php echo htmlspecialchars($unemployed_count); ?></p>
+                    <a class="mt-2 text-s font-bold" style="color:blue;" href="residents.php?filter=unemployed">View all</a>
                 </div>
             </div>
         </div>
@@ -201,7 +207,7 @@ try {
 
         avatar.addEventListener('click', () => {
             sidebar.classList.toggle('active');
-            avatar.classList.add('hidden');
+            avatar.classList.add('active');
         });
 
         sidebarAvatar.addEventListener('click', () => {

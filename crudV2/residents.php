@@ -14,9 +14,12 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $filter = '';
 $search_term = '';
-if (isset($_POST['filter'])) {
+if (isset($_GET['filter'])) {
+    $filter = $_GET['filter'];
+} elseif (isset($_POST['filter'])) {
     $filter = $_POST['filter'];
 }
+
 if (isset($_POST['search_term'])) {
     $search_term = $_POST['search_term'];
 }
@@ -55,6 +58,7 @@ try {
     echo "Error: " . $e->getMessage();
     exit;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -84,6 +88,7 @@ try {
         <div id="avatar-only" class="p-5 cursor-pointer">
             <img src="7.png" alt="Admin Avatar" class="w-20 h-20 rounded-full">
         </div>
+         
 
     <!-- Main content -->
     <div class="ml-64 p-6">
@@ -148,7 +153,7 @@ try {
 
         avatar.addEventListener('click', () => {
             sidebar.classList.toggle('active');
-            avatar.classList.add('hidden');
+            avatar.classList.add('active');
         });
 
         sidebarAvatar.addEventListener('click', () => {

@@ -46,7 +46,6 @@ if (!$user) {
         </div>
         <ul class="mt-10">
             <li class="mb-4"><a href="user_dashboard.php" class="text-white hover:text-black font-bold">Profile</a></li>
-            <li class="mb-4"><a href="javascript:void(0)" class="text-white hover:text-black hover:font-bold" onclick="toggleModal()">Edit Profile</a></li>
             <li class="mb-4"><a href="logout.php" class="text-white hover:text-black hover:font-bold">Log Out</a></li>
         </ul>
     </div>
@@ -56,15 +55,15 @@ if (!$user) {
         <img src="7.png" alt="User Avatar" class="w-20 h-20 rounded-full">
     </div>
 
-    
-    <?php if (isset($_GET['update'])): ?>
-    <div class="p-4 mb-4 text-sm <?= $_GET['update'] == 'success' ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100' ?> rounded-lg" role="alert">
-       <p class ="font-bold text-l" ><?= $_GET['update'] == 'success' ? 'User information updated successfully!' : 'An error occurred while updating user information.' ?></p>
-    </div>
-    <?php endif; ?>
+     <!-- Editing Information Notifaction -->
+                <?php if (isset($_GET['update'])): ?>
+                    <div class="p-4 mb-4 text-sm ml-72 mr-12 <?= $_GET['update'] == 'success' ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100' ?> rounded-lg" role="alert">
+                            <p class ="font-bold text-l" ><?= $_GET['update'] == 'success' ? 'User information updated successfully!' : 'An error occurred while updating user information.' ?></p>
+                    </div>
+                <?php endif; ?>
 
 
-        <div class="flex items-center justify-between lg:ml-72 mt-12 transition-all duration-300">
+        <div class="flex items-center justify-between lg:ml-72 transition-all duration-300">
                 <h1 class="text-2xl font-bold">Profile Dashboard</h1>
             </div>
         
@@ -84,6 +83,13 @@ if (!$user) {
                 <li id="contact-info-link"><a href="javascript:void(0)" class="nav-link text-blue-600 font-bold hover:text-black" onclick="showSection('contact-info')">Contact Information</a></li>
             </ul>
          </div>
+
+        <!-- Add Edit Profile Button -->
+        <div class="flex mt-6">
+            <button onclick="toggleModal()" class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+                Edit Profile
+            </button>
+        </div>
 
         <!-- Account Center Section -->
         <div id="account" class="section-content bg-white p-6 rounded-lg shadow-md mt-6">
@@ -154,7 +160,7 @@ if (!$user) {
             
             <div class="mt-4">
                 <label for="contact" class="block">Contact Number</label>
-                <input type="text" name="contact" id="contact" class="p-2 border rounded w-full" value="<?= $user['contact'] ?>">
+                <input type="number" name="contact" id="contact" class="p-2 border rounded w-full" value="<?= $user['contact'] ?>">
             </div>
 
             <div class="mt-4">
@@ -172,9 +178,14 @@ if (!$user) {
                 </select>
             </div>
 
+            <div class="mt-4">
+                <label for="citizenship" class="block">Citizenship</label>
+                <input type="text" name="citizenship" id="contact" class="p-2 border rounded w-full" value="<?= $user['citizenship'] ?>">
+            </div>
+
             <!-- Add Achieved Status Field -->
             <div class="mt-4">
-                <label for="achieved_status" class="block">Civil Status</label>
+                <label for="achieved_status" class="block">Achieved Status</label>
                 <select name="achieved_status" id="achieved_status" class="w-full p-2 border rounded" required>
                     <option value="Student" <?= $user['achieved_status'] === 'Student' ? 'selected' : '' ?>>Student</option>
                     <option value="Employed" <?= $user['achieved_status'] === 'Employed' ? 'selected' : '' ?>>Employed</option>
@@ -206,7 +217,7 @@ if (!$user) {
         const sidebar = document.getElementById('sidebar');
         sidebar.classList.toggle('active');
         const avatarOnly = document.getElementById('avatar-only');
-        avatarOnly.classList.toggle('hidden');
+        avatarOnly.classList.toggle('active');
     }
 
     document.getElementById('sidebar-avatar').addEventListener('click', toggleSidebar);
@@ -215,6 +226,22 @@ if (!$user) {
     function toggleModal() {
         document.getElementById('editModal').classList.toggle('hidden');
     }
+    // Sidebar toggle functionality
+    document.getElementById('avatar-only').addEventListener('click', function() {
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+
+  // Toggle sidebar visibility
+    sidebar.classList.toggle('closed');
+
+  // Adjust content positioning
+        if (sidebar.classList.contains('closed')) {
+            content.classList.add('centered');
+            } else {
+            content.classList.remove('centered');
+            }
+});
+
 
     // Handle form submission via AJAX
     document.getElementById('editForm').addEventListener('submit', function(e) {
