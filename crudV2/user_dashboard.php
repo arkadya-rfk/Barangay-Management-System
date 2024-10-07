@@ -21,6 +21,14 @@ function capitalizeStatus($status) {
     return ucfirst(strtolower($status)); // Convert to lowercase first, then capitalize
 }
 
+$userId = 1; // Replace with dynamic user ID
+$sql = "SELECT first_name, middle_name, last_name, image FROM USERS WHERE id = $userId";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+}
+
 if (!$user) {
     echo "User not found!";
     exit;
@@ -46,12 +54,15 @@ if (!$user) {
         </div>
         <ul class="mt-10">
             <li class="mb-4"><a href="user_dashboard.php" class="text-white hover:text-black font-bold">Profile</a></li>
+            <li class="mb-4"><a href="blotter.php" class="text-white hover:text-black">Blotter Request</a></li>
+            <li class="mb-4"><a href="doc_request.php" class="text-white hover:text-black">Document Request</a></li>
+            <li class="mb-4"><a href="verified.php" class="text-white hover:text-black">Getting Verified</a></li>
             <li class="mb-4"><a href="logout.php" class="text-white hover:text-black hover:font-bold">Log Out</a></li>
         </ul>
     </div>
 
-    <!-- Avatar for toggling the sidebar -->
-    <div id="avatar-only" class="p-5 cursor-pointer">
+    <!-- Avatar sidebar -->
+    <div id="avatar-only" class="p-5">
         <img src="7.png" alt="User Avatar" class="w-20 h-20 rounded-full">
     </div>
 
@@ -62,14 +73,20 @@ if (!$user) {
                     </div>
                 <?php endif; ?>
 
-
+             <!-- Header -->       
         <div class="flex items-center justify-between lg:ml-72 transition-all duration-300">
                 <h1 class="text-2xl font-bold">Profile Dashboard</h1>
             </div>
         
+            <!-- Profile-->
             <div id="content" class="content p-6 lg:ml-64">
-        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <img src="ambot.jpeg" alt="Profile" class="w-36 h-36 rounded-full mx-auto">
+
+            <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <!-- Profile Image -->
+                <img src="<?= isset($user['image']) ? $user['image'] : 'ambot.jpeg' ?>" 
+                    alt="Profile" class="w-36 h-36 rounded-full mx-auto">
+
+            <!-- Profile Name -->
             <h2 class="text-2xl font-bold mt-4">
                 <?= isset($user['first_name']) && isset($user['last_name']) ? $user['first_name'] . " " . $user['middle_name'] . " " . $user['last_name'] : 'Name Not Available' ?>
             </h2>
@@ -89,7 +106,13 @@ if (!$user) {
             <button onclick="toggleModal()" class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
                 Edit Profile
             </button>
+        <!-- Upload Image -->
+            <button onclick="toggleUpload()" class="ml-4 bg-green-700 text-white font-bold py-2 px-4 rounded hover:bg-green-900">
+                Upload Image
+            </button>
         </div>
+
+
 
         <!-- Account Center Section -->
         <div id="account" class="section-content bg-white p-6 rounded-lg shadow-md mt-6">
@@ -212,36 +235,39 @@ if (!$user) {
     </div>
 </div>
 
+        <!-- Upload Modal -->
+            <div id="uploadModal" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white p-6 rounded-lg w-full max-w-2xl">
+                    <h2 class="text-xl font-bold mb-4">Upload Image</h2>
+        
+        <!-- Form to Upload Image -->
+            <form action="upload_image.php" method="post" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label for="image" class="block text-sm font-medium text-gray-700">Select Image:</label>
+                    <input type="file" name="image" id="image" class="mt-1 block w-full" required>
+                </div>
+            <input type="hidden" name="user_id" value="1"> <!-- Assuming user ID 1 -->
+
+            <div class="flex justify-end">
+                <button type="button" onclick="toggleUpload()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">
+                    Cancel
+                </button>
+                <button type="submit" class="bg-green-700 text-white font-bold py-2 px-4 rounded hover:bg-green-900">
+                    Upload
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('active');
-        const avatarOnly = document.getElementById('avatar-only');
-        avatarOnly.classList.toggle('active');
-    }
-
-    document.getElementById('sidebar-avatar').addEventListener('click', toggleSidebar);
-    document.getElementById('avatar-only').addEventListener('click', toggleSidebar);
-
     function toggleModal() {
         document.getElementById('editModal').classList.toggle('hidden');
     }
-    // Sidebar toggle functionality
-    document.getElementById('avatar-only').addEventListener('click', function() {
-    const sidebar = document.getElementById('sidebar');
-    const content = document.getElementById('content');
-
-  // Toggle sidebar visibility
-    sidebar.classList.toggle('closed');
-
-  // Adjust content positioning
-        if (sidebar.classList.contains('closed')) {
-            content.classList.add('centered');
-            } else {
-            content.classList.remove('centered');
-            }
-});
-
+    function toggleUpload() {
+        var modal = document.getElementById("uploadModal");
+        modal.classList.toggle("hidden");
+    }
 
     // Handle form submission via AJAX
     document.getElementById('editForm').addEventListener('submit', function(e) {

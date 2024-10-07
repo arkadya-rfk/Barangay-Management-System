@@ -17,41 +17,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($result->num_rows > 0) {
         // User exists, now check the password
         $user = $result->fetch_assoc();
-        
-        // Debugging output
-        // print_r($user); // Uncomment for debugging
-
+    
         // For admin, no password hashing
         if ($user['role'] == 'admin' && $password === $user['password']) {
             // Set session for admin
             $_SESSION['user'] = [
-                'id' => $user['id'],
+                'id' => $user['id'], // Store user ID
                 'first_name' => $user['first_name'],
                 'middle_name' => $user['middle_name'],
                 'last_name' => $user['last_name'],
                 'email' => $user['email'],
                 'role' => $user['role']
             ];
-
+    
             // Redirect to admin panel
             header("Location: admin.php");
             exit;
-
+    
         } elseif ($user['role'] == 'user' && password_verify($password, $user['password'])) {
             // Set session for user
             $_SESSION['user'] = [
-                'id' => $user['id'],
+                'id' => $user['id'], // Store user ID
                 'first_name' => $user['first_name'],
                 'middle_name' => $user['middle_name'],
                 'last_name' => $user['last_name'],
                 'email' => $user['email'],
                 'role' => $user['role']
             ];
-
+    
             // Redirect to user dashboard
             header("Location: user_dashboard.php");
             exit;
-
+    
         } else {
             // Invalid password 
             $error = "Invalid username or password!";

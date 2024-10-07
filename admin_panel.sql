@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 23, 2024 at 12:44 PM
+-- Generation Time: Oct 07, 2024 at 06:58 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -22,9 +22,7 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
-CREATE DATABASE admin_panel;
 
-USE admin_panel;
 --
 -- Table structure for table `users`
 --
@@ -45,19 +43,20 @@ CREATE TABLE `users` (
   `user_email` varchar(255) DEFAULT NULL,
   `contact` varchar(20) DEFAULT NULL,
   `birth_date` date DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL
+  `address` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `middle_name`, `last_name`, `age`, `gender`, `civil_status`, `citizenship`, `achieved_status`, `email`, `password`, `role`, `user_email`, `contact`, `birth_date`, `address`) VALUES
-(3, 'Admin', NULL, 'User', 30, 'male', 'single', 'citizen', NULL, 'admin', 'admin123', 'admin', NULL, NULL, NULL, NULL),
-(19, 'ADMIN', '', '', 21, 'male', 'single', 'Pinoy', 'Student', 'admin1', 'admin123', 'admin', NULL, NULL, NULL, NULL),
-(20, 'Therenz', 'Andulana', 'Jaromohom', 21, 'male', 'single', 'Filipino', 'Student', 'Zuou', '$2y$10$hhng8NAa5zAbfbZhk90bd.MTcYudmJFjqvTwlxc0R0/1BTHhz9gCO', 'user', 'jaromohomrenze231@gmail.com', '09682021257', '2003-01-12', 'Umapad, Mandaue City, Cebu'),
-(23, 'Ray Jay', 'Estenzo', 'Lato', 21, 'male', 'single', 'Opaw', 'Student', 'Akari', '$2y$10$5zP5wm.tG2uwrZ2lj3u4CO/eNCOTTMLRd5DvTdyDt2DqHJ2pyrRkS', 'user', 'pilotbyjames@gmail.com', '09682021245', '2000-06-30', 'Compostela, Cebu'),
-(24, 'Steven', 'Auron', 'Tejero', 69, 'male', 'single', 'Pablo', 'Student', 'Stizmo', '$2y$10$cUjrwkV4iHtdhYwvx8wg4u/3iI11KSNbIWDYnZW6Ob.zs82o6xhAq', 'user', 'hotmeteorite3@gmail.com', '09323722251', '2004-04-18', 'Jubay, Liloan');
+INSERT INTO `users` (`id`, `first_name`, `middle_name`, `last_name`, `age`, `gender`, `civil_status`, `citizenship`, `achieved_status`, `email`, `password`, `role`, `user_email`, `contact`, `birth_date`, `address`, `image`) VALUES
+(3, 'Admin', NULL, 'User', 30, 'male', 'single', 'citizen', NULL, 'admin', 'admin123', 'admin', NULL, NULL, NULL, NULL, NULL),
+(19, 'ADMIN', '', '', 21, 'male', 'single', 'Pinoy', 'Student', 'admin1', 'admin123', 'admin', NULL, NULL, NULL, NULL, NULL),
+(20, 'Therenz', 'Andulana', 'Jaromohom', 21, 'male', 'single', 'Filipino', 'Student', 'Zuou', '$2y$10$hhng8NAa5zAbfbZhk90bd.MTcYudmJFjqvTwlxc0R0/1BTHhz9gCO', 'user', 'jaromohomrenze231@gmail.com', '09682021257', '2003-01-12', 'Umapad, Mandaue City, Cebu', NULL),
+(23, 'Ray Jay', 'Estenzo', 'Lato', 21, 'female', 'single', 'Opaw', 'Student', 'Akari', '$2y$10$5zP5wm.tG2uwrZ2lj3u4CO/eNCOTTMLRd5DvTdyDt2DqHJ2pyrRkS', 'user', 'pilotbyjames@gmail.com', '09682021245', '2000-06-30', 'Compostela, Cebu', 'uploads/IMG_20220930_154417.jpg'),
+(24, 'Steven', 'Auron', 'Tejero', 69, 'male', 'single', 'Pablo', 'Student', 'Stizmo', '$2y$10$cUjrwkV4iHtdhYwvx8wg4u/3iI11KSNbIWDYnZW6Ob.zs82o6xhAq', 'user', 'hotmeteorite3@gmail.com', '09323722251', '2004-04-18', 'Jubay, Liloan', NULL);
 
 --
 -- Indexes for dumped tables
