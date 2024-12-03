@@ -1,0 +1,49 @@
+.center-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 80vh;
+    margin-top: 40px;
+}
+
+#sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: #1E40AF;
+    /* Removed transitions and transform properties */
+}
+
+#avatar-only, .sidebar-avatar {
+    /* Removed these properties since toggling is no longer needed */
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    z-index: 10;
+}
+
+.widget {
+    width: 400px;
+}
+
+/* Hide results div initially */
+#results {
+    display: none;
+}
+
+/* Hide back button initially */
+#back-btn {
+    display: none;
+}
+/* Adjust content area to account for the sidebar */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.widget { width: 400px; }
+
+#results, #back-btn { display: none; }

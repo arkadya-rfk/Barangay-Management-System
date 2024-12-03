@@ -1,0 +1,40 @@
+.center-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 80vh;
+    margin-top: 40px;
+}
+
+#sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: #1E40AF;
+    transition: transform 0.3s ease; /* Smooth transitions for hover effects, if any */
+}
+
+#avatar-only .sidebar-avatar {
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    z-index: 10;
+}
+
+/* Hidden sections initially */
+.section-content {
+    display: none;
+}
+
+/* Show active section */
+.section-content.active {
+    display: block;
+}
+
+.active-link {
+    color: black !important; /* Ensure that the active link text is always black */
+    font-weight: bold; /* Keep the bold style */
+}
